@@ -30,9 +30,9 @@ struct KdTree
 		if (*p_cur == NULL)
 			*p_cur = new_node;
 		else if (new_node->point[depth%2] < (*p_cur)->point[depth%2])
-			insertHelper(&(*p_cur)->left, new_node, ++depth);
+			insertHelper(&(*p_cur)->left, new_node, depth++);
 		else
-			insertHelper(&(*p_cur)->right, new_node, ++depth);
+			insertHelper(&(*p_cur)->right, new_node, depth++);
 	}
 
 	void insert(std::vector<float> point, int id)
@@ -53,13 +53,17 @@ struct KdTree
 	{
 		if (p_cur != NULL) 
 		{
-			if (distance(p_cur->point, target) <= distanceTol)
-				ids.push_back(p_cur->id);
+			if (p_cur->point[0] >=(target[0]-distanceTol) && p_cur->point[0] <=(target[0]+distanceTol) &&
+				p_cur->point[1] >=(target[1]-distanceTol) && p_cur->point[1] <=(target[1]+distanceTol)) 
+			{
+				if (distance(p_cur->point, target) <= distanceTol)
+					ids.push_back(p_cur->id);
+			}
 		
 			if (target[depth%2] < p_cur->point[depth%2])
-				searchHelper(p_cur->left, target, distanceTol, ++depth, ids);
+				searchHelper(p_cur->left, target, distanceTol, depth++, ids);
 			if (target[depth%2] > p_cur->point[depth%2])
-				searchHelper(p_cur->right, target, distanceTol, ++depth, ids);
+				searchHelper(p_cur->right, target, distanceTol, depth++, ids);
 
 		}
 	}
